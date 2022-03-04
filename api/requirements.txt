@@ -1,0 +1,9 @@
+flask==2.0.1
+gunicorn
+pydantic
+typing-extensions
+psycopg2-binary
+Flask-SQLAlchemy
+Flask-Migrate
+flask-marshmallow
+flask-restful

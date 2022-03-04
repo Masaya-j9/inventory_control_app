@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./api:/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+    depends_on:
+      - db
+    tty: true
+
+  db:
+    image: postgres:12
+    container_name: flask_db
+    ports:
+     - '5432:5432'
+    environment:
+     - POSTGRES_PASSWORD=postgres
+     - POSTGRES_USER=postgres
+     - POSTGRES_DB=postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  frontend:
+    build:
+      context: ./app/frontend
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./app/frontend:/app/frontend
+      - node_modules_volumes:/app/frontend/node_modules
+    # command: frontend sh -c 'yarn start'
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+    tty: true
+
+volumes:
+  node_modules_volumes:
+  pgdata: {}
